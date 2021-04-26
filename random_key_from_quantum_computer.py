@@ -1,6 +1,6 @@
 import os
 import sys
-import qrng
+import qrng # Install this module so that IBM Quantum Computers can be accessed '$ pip install qrng'.
 from hashlib import sha3_256, sha3_512
 
 # Checking the type of operating system.
@@ -9,9 +9,9 @@ if sys.platform == "linux" or sys.platform == "linux2" or sys.platform == "darwi
 elif sys.platform == "win32":
     def clear(): os.system('cls') # On Windows system.
 
-clear()
+clear() # Clean the terminal.
 
-qrng.set_provider_as_IBMQ('YOUR_IBMQ_TOKEN_HERE')
+qrng.set_provider_as_IBMQ('YOUR_IBMQ_TOKEN_HERE') # Your API Token from 'https://quantum-computing.ibm.com/'.
 
 # qrng.IBMQ.ibmq.save_account('YOUR_IBMQ_TOKEN_HERE', overwrite = True) <- Use this to overwrite any API Token.
 
@@ -20,6 +20,7 @@ qrng.set_backend('simulator_statevector')   # Use 'simulator_statevector' for Qu
 clear()
 
 
+# Randomly generates a 256 bits private key, through a quantum process.
 def key_256bits():
     
     bits = qrng.get_bit_string(15360)
@@ -32,6 +33,7 @@ def key_256bits():
     return key
 
 
+# Randomly generates a 512 bits private key, through a quantum process.
 def key_512bits():
     
     bits = qrng.get_bit_string(15360)
