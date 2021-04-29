@@ -27,7 +27,7 @@ def argon2id_hasher(password, salt, hashlen, suffix) -> str:
     return (encoded_hash, hexhash)
 
 # Your API Token from 'https://quantum-computing.ibm.com/'.
-qrng.set_provider_as_IBMQ('6c960e18b5a3b5c8683c48b7c43214c825be4329089a4cc6e0980fc5f63fc942f9b5df166006db254c15202832b3f064365180043f0a55b7500a01aad94d16fb')
+qrng.set_provider_as_IBMQ('YOUR_IBMQ_TOKEN_HERE')
 
 # Use this code below to overwrite any API Token.
 # qrng.IBMQ.ibmq.save_account('YOUR_IBMQ_TOKEN_HERE', overwrite = True)
