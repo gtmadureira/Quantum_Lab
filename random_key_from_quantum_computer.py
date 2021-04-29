@@ -3,22 +3,27 @@ import sys
 import qrng # Install this module so that IBM Quantum Computers can be accessed '$ pip install qrng'.
 from hashlib import sha3_256, sha3_512
 
-# Checking the type of operating system.
+# Checking the type of operating system to determine the clear function.
 if sys.platform == "linux" or sys.platform == "linux2" or sys.platform == "darwin":
     def clear(): os.system('clear') # On Linux/OS X system.
 elif sys.platform == "win32":
     def clear(): os.system('cls') # On Windows system.
 
-clear() # Clean the terminal.
-
-qrng.set_provider_as_IBMQ('YOUR_IBMQ_TOKEN_HERE') # Your API Token from 'https://quantum-computing.ibm.com/'.
-
-# qrng.IBMQ.ibmq.save_account('YOUR_IBMQ_TOKEN_HERE', overwrite = True) <- Use this to overwrite any API Token.
-
-qrng.set_backend('simulator_statevector')   # Use 'simulator_statevector' for Quantum Simulator System. Faster!
-                                            # Use 'ibmq_16_melbourne' for real Quantum Computer System. Slower!
+# Clean the terminal.
 clear()
 
+# Your API Token from 'https://quantum-computing.ibm.com/'.
+qrng.set_provider_as_IBMQ('YOUR_IBMQ_TOKEN_HERE')
+
+# Use this code below to overwrite any API Token.
+# qrng.IBMQ.ibmq.save_account('YOUR_IBMQ_TOKEN_HERE', overwrite = True)
+
+# Use 'simulator_statevector' for Quantum Simulator System. Faster!
+# Use 'ibmq_16_melbourne' for real Quantum Computer System. Slower!
+qrng.set_backend('simulator_statevector')
+
+# Clean the terminal.
+clear()
 
 # Randomly generates a 256 bits private key, through a quantum process.
 def key_256bits():
@@ -52,7 +57,6 @@ key512 = key_512bits()
 print("This is a Random 256 bits Key from Quantum Computer:")
 print()
 print(key256)
-print()
 print()
 print()
 print("This is a Random 512 bits Key from Quantum Computer:")
