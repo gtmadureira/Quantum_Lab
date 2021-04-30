@@ -26,9 +26,9 @@ def main():
 
     # Hashing function using Argon2(*id* version) algorithm.
     def argon2id_hasher(password, salt, hashlen, suffix) -> str:
-        encoded_hash = argon2.low_level.hash_secret(password, salt.encode('utf-8'),
-                                            time_cost = timeCost, memory_cost = memoryCost, parallelism = paraLLelism,
-                                            hash_len = hashlen, type = argon2.low_level.Type.ID)
+        encoded_hash = argon2.low_level.hash_secret(password, salt,
+        time_cost = timeCost, memory_cost = memoryCost, parallelism = paraLLelism,
+        hash_len = hashlen, type = argon2.low_level.Type.ID)
         encoded_hash = encoded_hash.decode("utf-8")
         hexhash = base64.b64decode(encoded_hash[-suffix:] + '===').hex()
         return (encoded_hash, hexhash)
@@ -46,25 +46,31 @@ def main():
     # Use 'ibmq_16_melbourne' for real Quantum Computer System. Slower!
     qrng.set_backend('simulator_statevector')
 
-    # Get 64000 random bits for the initial entropy, through the IBM Quantum Computer System. 
-    QBits = qrng.get_bit_string(64000)
+    # Get 64000 random bits for the data entropy;
+    # Get 512 random bits for the hash salt;
+    # through the IBM Quantum Computer System. 
+    qbits_data = qrng.get_bit_string(64000)
+    qbits_salt = qrng.get_bit_string(512)
 
     # Convert the bit string to integer.
-    QBits_to_int = int("0b" + QBits, 2)
+    qbits_data_to_int = int("0b" + qbits_data, 2)
+    qbits_salt_to_int = int("0b" + qbits_salt, 2)
 
     # Convert the integer to hex string.
-    int_to_hex = hex(QBits_to_int)[2:].zfill(16000)
+    data_int_to_hex = hex(qbits_data_to_int)[2:].zfill(16000)
+    salt_int_to_hex = hex(qbits_salt_to_int)[2:].zfill(128)
 
     # Convert the hex string to bytes.
-    hex_to_bytes = bytes.fromhex(int_to_hex)
+    data_hex_to_bytes = bytes.fromhex(data_int_to_hex)
+    salt_hex_to_bytes = bytes.fromhex(salt_int_to_hex)
 
     # Get binary entropy with checksum.
-    entropy = argon2id_hasher(hex_to_bytes, "Hattori Hanzō", 32, 43)
+    entropy = argon2id_hasher(data_hex_to_bytes, salt_hex_to_bytes, 32, 43)
     entropyHashBytes = hashlib.sha256(bytes.fromhex(entropy[1])).hexdigest()
     checksum = '{:08b}'.format(int("0x" + entropyHashBytes[0:2], 16))
     binary_seed = ""
 
-    for b in bytearray.fromhex(entropy[1]):
+    for b in bytes.fromhex(entropy[1]):
         binary_seed = binary_seed + "{:08b}".format(b)
 
     binary_seed = binary_seed + checksum
@@ -110,16 +116,30 @@ def main():
 
     # To serialized key (master node).
     m_ext_key = hmac.new(b'Bitcoin seed', bytes.fromhex(hex_seed), hashlib.sha512).hexdigest().zfill(128).upper()
-    version = "0488ADE4"
+    version_bip44 = "0488ADE4"
+    version_bip49 = "049D7878"
+    version_bip84 = "04B2430C"
     depth = "00"
     fingerprint = "00000000"
     index = "00000000"
     chain_code = m_ext_key[64:]
     private_key = "00" + m_ext_key[0:64]
-    checksum = hashlib.sha256(hashlib.sha256(bytes.fromhex(version + depth + fingerprint + index + chain_code + private_key)).digest()).hexdigest().zfill(64).upper()[0:8]
-    serialized = base58.b58encode(bytes.fromhex(version + depth + fingerprint + index + chain_code + private_key + checksum))
-    d_print = print("\n\nMaster Node (root key):\n\n" + serialized.decode("utf-8"))
 
-    return a_print, b_print, c_print, d_print
+    # Serialized BIP44
+    checksum = hashlib.sha256(hashlib.sha256(bytes.fromhex(version_bip44 + depth + fingerprint + index + chain_code + private_key)).digest()).hexdigest().zfill(64).upper()[0:8]
+    serialized = base58.b58encode(bytes.fromhex(version_bip44 + depth + fingerprint + index + chain_code + private_key + checksum))
+    d_print = print("\n\nMaster Node (BIP44 root key):\n\n" + serialized.decode("utf-8"))
+
+    # Serialized BIP49
+    checksum = hashlib.sha256(hashlib.sha256(bytes.fromhex(version_bip49 + depth + fingerprint + index + chain_code + private_key)).digest()).hexdigest().zfill(64).upper()[0:8]
+    serialized = base58.b58encode(bytes.fromhex(version_bip49 + depth + fingerprint + index + chain_code + private_key + checksum))
+    e_print = print("\n\nMaster Node (BIP49 root key):\n\n" + serialized.decode("utf-8"))
+
+    # Serialized BIP84
+    checksum = hashlib.sha256(hashlib.sha256(bytes.fromhex(version_bip84 + depth + fingerprint + index + chain_code + private_key)).digest()).hexdigest().zfill(64).upper()[0:8]
+    serialized = base58.b58encode(bytes.fromhex(version_bip84 + depth + fingerprint + index + chain_code + private_key + checksum))
+    f_print = print("\n\nMaster Node (BIP84 root key):\n\n" + serialized.decode("utf-8"))
+
+    return a_print, b_print, c_print, d_print, e_print, f_print
 
 main()
