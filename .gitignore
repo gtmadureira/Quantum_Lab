@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 .history/
+
+ibmq_api_token
