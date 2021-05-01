@@ -101,7 +101,7 @@ def main():
     for value in chunks:
         mnemonic.append(wordList[int(value, 2)])
 
-    b_print = print("\n\nBIP39 Seed Phrase:\n\n" + " ".join(mnemonic))
+    b_print = print("\n\nBIP39 - Mnemonic Phrase:\n\n" + " ".join(mnemonic))
 
     # To SEED.
     mnemonic_phrase = " ".join(mnemonic)
@@ -112,11 +112,11 @@ def main():
     encoded_mnemonic_phrase = normalized_mnemonic_phrase.encode("utf-8")
     encoded_passphrase = prefixed_passphrase.encode("utf-8")
     hex_seed = hashlib.pbkdf2_hmac("sha512", encoded_mnemonic_phrase, encoded_passphrase, 2048, 64).hex().zfill(64).upper()
-    c_print = print("\n\nMaster Seed:\n\n" + hex_seed)
+    c_print = print("\n\nBIP39 - Master Seed:\n\n" + hex_seed)
 
     # To serialized key (master node).
     m_ext_key = hmac.new(b'Bitcoin seed', bytes.fromhex(hex_seed), hashlib.sha512).hexdigest().zfill(128).upper()
-    m_print = print("\n\nMaster Extended Private Key:\n\n" + m_ext_key)
+    m_print = print("\n\nNon-Serialized Master Node (Root Extended Private Key):\n\n" + m_ext_key)
     version_bip44 = "0488ADE4"
     version_bip49 = "049D7878"
     version_bip84 = "04B2430C"
@@ -129,17 +129,17 @@ def main():
     # Serialized BIP32-BIP44
     checksum = hashlib.sha256(hashlib.sha256(bytes.fromhex(version_bip44 + depth + fingerprint + index + chain_code + private_key)).digest()).hexdigest().zfill(64).upper()[0:8]
     serialized = base58.b58encode(bytes.fromhex(version_bip44 + depth + fingerprint + index + chain_code + private_key + checksum))
-    d_print = print("\n\nMaster Node (BIP32-BIP44 Root Key):\n\n" + serialized.decode("utf-8"))
+    d_print = print("\n\nSerialized Master Node (Root Extended Private Key on BIP32-BIP44):\n\n" + serialized.decode("utf-8"))
 
-    # Serialized BIP49
+    # Serialized BIP49-BIP141
     checksum = hashlib.sha256(hashlib.sha256(bytes.fromhex(version_bip49 + depth + fingerprint + index + chain_code + private_key)).digest()).hexdigest().zfill(64).upper()[0:8]
     serialized = base58.b58encode(bytes.fromhex(version_bip49 + depth + fingerprint + index + chain_code + private_key + checksum))
-    e_print = print("\n\nMaster Node (BIP49 Root Key):\n\n" + serialized.decode("utf-8"))
+    e_print = print("\n\nSerialized Master Node (Root Extended Private Key on BIP49-BIP141):\n\n" + serialized.decode("utf-8"))
 
     # Serialized BIP84
     checksum = hashlib.sha256(hashlib.sha256(bytes.fromhex(version_bip84 + depth + fingerprint + index + chain_code + private_key)).digest()).hexdigest().zfill(64).upper()[0:8]
     serialized = base58.b58encode(bytes.fromhex(version_bip84 + depth + fingerprint + index + chain_code + private_key + checksum))
-    f_print = print("\n\nMaster Node (BIP84 Root Key):\n\n" + serialized.decode("utf-8"))
+    f_print = print("\n\nSerialized Master Node (Root Extended Private Key on BIP84):\n\n" + serialized.decode("utf-8"))
 
     return a_print, b_print, c_print, m_print, d_print, e_print, f_print
 
