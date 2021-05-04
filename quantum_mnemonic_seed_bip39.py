@@ -114,7 +114,7 @@ def main():
     hex_seed = hashlib.pbkdf2_hmac("sha512", encoded_mnemonic_phrase, encoded_passphrase, 2048, 64).hex().zfill(64).upper()
     c_print = print("\n\nBIP39 - Master Seed:\n\n" + hex_seed)
 
-    # To serialized key (master node).
+    # Preparing serialized key (master node).
     m_ext_key = hmac.new(b'Bitcoin seed', bytes.fromhex(hex_seed), hashlib.sha512).hexdigest().zfill(128).upper()
     m_print = print("\n\nNon-Serialized Master Node (Root Extended Private Key):\n\n" + m_ext_key)
     version_bip44 = "0488ADE4"
