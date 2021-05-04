@@ -117,7 +117,7 @@ def main():
 
     b_print = print("\nCustom Seed Phrase:\n\n" + " ".join(mnemonic))
 
-    # To SEED.
+    # To Seed.
     mnemonic_phrase = " ".join(mnemonic)
     seed_extension_passphrase = ""
     normalized_mnemonic_phrase = unicodedata.normalize("NFKD", mnemonic_phrase)
