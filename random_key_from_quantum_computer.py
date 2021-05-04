@@ -65,8 +65,8 @@ def key_512bits():
     return key
 
 
-key256 = key_256bits()
-key512 = key_512bits()
+key_256 = key_256bits()
+key_512 = key_512bits()
 
 # Finishes the loading animation.
 wait.stop()
@@ -76,9 +76,9 @@ clear()
 
 print("This is a Random 256 bits Key from Quantum Computer:")
 print()
-print(key256)
+print(key_256)
 print()
 print()
 print("This is a Random 512 bits Key from Quantum Computer:")
 print()
-print(key512)
+print(key_512)
