@@ -123,7 +123,7 @@ def main():
 
     b_print = print("\n\nBIP39 - Mnemonic Phrase:\n\n" + " ".join(mnemonic))
 
-    # To SEED.
+    # To Seed.
     mnemonic_phrase = " ".join(mnemonic)
     seed_extension_passphrase = ""
     normalized_mnemonic_phrase = unicodedata.normalize("NFKD", mnemonic_phrase)
