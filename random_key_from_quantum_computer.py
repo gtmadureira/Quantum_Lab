@@ -2,6 +2,7 @@ import os
 import sys
 import qrng # Install this module so that IBM Quantum Computers can be accessed '$ pip install qrng'.
 from hashlib import sha3_256, sha3_512
+import animation # Loading animation module '$ pip install animation'.
 
 # Checking the type of operating system to determine the clear function.
 if sys.platform == "linux" or sys.platform == "linux2" or sys.platform == "darwin":
@@ -12,18 +13,31 @@ elif sys.platform == "win32":
 # Clean the terminal.
 clear()
 
-# Your API Token from 'https://quantum-computing.ibm.com/'.
-qrng.set_provider_as_IBMQ('YOUR_IBMQ_TOKEN_HERE')
+# Sets the loading animation.
+wait = animation.Wait(animation = 'dots',
+                      text = '[ Random Private Key - Wait for the IBM Quantum Computing System to generate entropy ]',
+                      color = 'cyan')
 
-# Use this code below to overwrite any API Token.
-# qrng.IBMQ.ibmq.save_account('YOUR_IBMQ_TOKEN_HERE', overwrite = True)
+# Starts the loading animation.
+wait.start()
+
+# Use this code below to save (or overwrite) the credential API Token.
+# Your API Token from 'https://quantum-computing.ibm.com/'.
+# Use 'YOUR_API_TOKEN_HERE' instead of "open('ibmq_api_token').read()" if you don't have it on file.
+qrng.IBMQ.save_account(open('ibmq_api_token').read(), overwrite = True)
+
+# ▲▲▲ or ▼▼▼
+
+# Your API Token from 'https://quantum-computing.ibm.com/'.
+# Use 'YOUR_API_TOKEN_HERE' instead of "open('ibmq_api_token').read()" if you don't have it on file.
+# qrng.set_provider_as_IBMQ(open('ibmq_api_token').read())
+
+# Load saved credential to access IBM Quantum Computing.
+qrng.IBMQ.load_account()
 
 # Use 'simulator_statevector' for Quantum Simulator System. Faster!
 # Use 'ibmq_16_melbourne' for real Quantum Computer System. Slower!
 qrng.set_backend('simulator_statevector')
-
-# Clean the terminal.
-clear()
 
 # Randomly generates a 256 bits private key, through a quantum process.
 def key_256bits():
@@ -51,14 +65,20 @@ def key_512bits():
     return key
 
 
-key256 = key_256bits()
-key512 = key_512bits()
+key_256 = key_256bits()
+key_512 = key_512bits()
+
+# Finishes the loading animation.
+wait.stop()
+
+# Clean the terminal.
+clear()
 
 print("This is a Random 256 bits Key from Quantum Computer:")
 print()
-print(key256)
+print(key_256)
 print()
 print()
 print("This is a Random 512 bits Key from Quantum Computer:")
 print()
-print(key512)
+print(key_512)

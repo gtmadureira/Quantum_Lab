@@ -6,6 +6,7 @@ import argon2 # Need to install the Argon2 package '$ pip install argon2-cffi'.
 import base64
 import base58
 import hashlib
+import animation # Loading animation module '$ pip install animation'.
 import unicodedata
 
 # Checking the type of operating system to determine the clear function.
@@ -16,6 +17,14 @@ elif sys.platform == "win32":
 
 # Clean the terminal.
 clear()
+
+# Sets the loading animation.
+wait = animation.Wait(animation = 'dots',
+                      text = '[ BIP39 Mnemonic Phrase - Wait for the IBM Quantum Computing System to generate entropy ]',
+                      color = 'cyan')
+
+# Starts the loading animation.
+wait.start()
 
 def main():
 
@@ -32,15 +41,20 @@ def main():
         encoded_hash = encoded_hash.decode("utf-8")
         hexhash = base64.b64decode(encoded_hash[-suffix:] + '===').hex()
         return (encoded_hash, hexhash)
+    
+    # Use this code below to save (or overwrite) the credential API Token.
+    # Your API Token from 'https://quantum-computing.ibm.com/'.
+    # Use 'YOUR_API_TOKEN_HERE' instead of "open('ibmq_api_token').read()" if you don't have it on file.
+    qrng.IBMQ.save_account(open('ibmq_api_token').read(), overwrite = True)
+    
+    # ▲▲▲ or ▼▼▼
 
     # Your API Token from 'https://quantum-computing.ibm.com/'.
-    qrng.set_provider_as_IBMQ(open('ibmq_api_token').read())
+    # Use 'YOUR_API_TOKEN_HERE' instead of "open('ibmq_api_token').read()" if you don't have it on file.
+    # qrng.set_provider_as_IBMQ(open('ibmq_api_token').read())
 
-    # Clean the terminal.
-    clear()
-
-    # Use this code below to overwrite any API Token.
-    # qrng.IBMQ.ibmq.save_account(open('ibmq_api_token').read(), overwrite = True)
+    # Load saved credential to access IBM Quantum Computing.
+    qrng.IBMQ.load_account()
 
     # Use 'simulator_statevector' for Quantum Simulator System. Faster!
     # Use 'ibmq_16_melbourne' for real Quantum Computer System. Slower!
@@ -88,6 +102,12 @@ def main():
             chunks.append("")
         chunks[index] += binary_seed[bit]
 
+    # Finishes the loading animation.
+    wait.stop()
+
+    # Clean the terminal.
+    clear()
+
     # Print words.
     word_index = 0
 
@@ -103,7 +123,7 @@ def main():
 
     b_print = print("\n\nBIP39 - Mnemonic Phrase:\n\n" + " ".join(mnemonic))
 
-    # To SEED.
+    # To Seed.
     mnemonic_phrase = " ".join(mnemonic)
     seed_extension_passphrase = ""
     normalized_mnemonic_phrase = unicodedata.normalize("NFKD", mnemonic_phrase)
