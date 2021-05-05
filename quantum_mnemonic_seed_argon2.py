@@ -1,3 +1,9 @@
+# Example of how to generate Custom Mnemonic Phrase with Quantum Computing.
+# For educational purposes only.
+# Works on Python 3.6.13 or higher.
+# Source: 'https://github.com/gtmadureira/Quantum_Lab/blob/main/quantum_mnemonic_seed_argon2.py'.
+# What is Quantum Computing: 'https://gtmadureira.github.io/Quantum_Lab/index.html'.
+
 import os
 import sys
 import qrng # Install this module so that IBM Quantum Computers can be accessed '$ pip install qrng'.
