@@ -40,7 +40,7 @@ def main():
     paraLLelism = 20 # 8 is the default value.
 
     # Hashing function using Argon2(*id* version) algorithm.
-    def argon2id_hasher(password, salt, hashlen, suffix) -> str:
+    def argon2id_hasher(password: bytes, salt: bytes, hashlen: int, suffix: int) -> str:
         encoded_hash = argon2.low_level.hash_secret(password, salt,
         time_cost = timeCost, memory_cost = memoryCost, parallelism = paraLLelism,
         hash_len = hashlen, type = argon2.low_level.Type.ID)
