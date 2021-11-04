@@ -12,6 +12,7 @@ import argon2 # Need to install the Argon2 package '$ pip install argon2-cffi'.
 import base64
 import base58
 import hashlib
+import secrets
 import animation # Loading animation module '$ pip install animation'.
 import unicodedata
 
@@ -69,8 +70,8 @@ def main():
     # Get 64000 random bits for the data entropy;
     # Get 512 random bits for the hash salt;
     # through the IBM Quantum Computer System. 
-    qbits_data = qrng.get_bit_string(64000)
-    qbits_salt = qrng.get_bit_string(512)
+    qbits_data = qrng.get_bit_string(32000) + bin(secrets.randbits(32000))[2:].zfill(32000)
+    qbits_salt = qrng.get_bit_string(256) + bin(secrets.randbits(256))[2:].zfill(256)
 
     # Convert the bit string to integer.
     qbits_data_to_int = int("0b" + qbits_data, 2)
